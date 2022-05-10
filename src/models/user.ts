@@ -1,6 +1,7 @@
 import type { Effect, Reducer } from 'umi';
 
 import { queryCurrent, query as queryUsers } from '@/services/user';
+import { json } from 'express';
 
 export type CurrentUser = {
   avatar?: string;
@@ -43,16 +44,29 @@ const UserModel: UserModelType = {
   effects: {
     *fetch(_, { call, put }) {
       const response = yield call(queryUsers);
+      //console.log('user.ts' + response);
       yield put({
         type: 'save',
         payload: response,
       });
     },
+    //get current user info data
     *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+
+      let isuserInfo = JSON.parse(localStorage.getItem('userInfo'));
+      
+      //console.log(isuserInfo);
+      
+      if (!isuserInfo){
+        isuserInfo = yield call(queryCurrent);
+        localStorage.setItem('userInfo',JSON.stringify(isuserInfo));
+
+      }
+      
+      //console.log(response);
       yield put({
         type: 'saveCurrentUser',
-        payload: response,
+        payload: isuserInfo,
       });
     },
   },
@@ -64,21 +78,7 @@ const UserModel: UserModelType = {
         currentUser: action.payload || {},
       };
     },
-    changeNotifyCount(
-      state = {
-        currentUser: {},
-      },
-      action,
-    ) {
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          notifyCount: action.payload.totalCount,
-          unreadCount: action.payload.unreadCount,
-        },
-      };
-    },
+    
   },
 };
 

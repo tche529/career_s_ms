@@ -15,7 +15,6 @@ export default {
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
-  'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
@@ -61,4 +60,6 @@ export default {
   'menu.person': '人员管理页',
   'menu.todo': '待办事项',
   'menu.dashboardworkplace': '工作台',
+  'menu.dashboard': '个人信息',
+  'menu.user': '用户管理',
 };

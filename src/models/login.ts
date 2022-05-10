@@ -2,9 +2,9 @@ import { stringify } from 'querystring';
 import type { Reducer, Effect } from 'umi';
 import { history } from 'umi';
 
-import { fakeAccountLogin } from '@/services/login';
-import { setAuthority } from '@/utils/authority';
-import { getPageQuery } from '@/utils/utils';
+import { fakeAccountLogin,logout } from '@/services/login';
+//import { setAuthority } from '@/utils/authority';
+//import { getPageQuery } from '@/utils/utils';
 import { message } from 'antd';
 
 export type StateType = {
@@ -33,58 +33,67 @@ const Model: LoginModelType = {
   },
 
   effects: {
+    //send request,excuet login
     *login({ payload }, { call, put }) {
+    
       const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
-      // Login successfully
-      if (response.status === 'ok') {
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
+      if (response.status === undefined){
         message.success('🎉 🎉 🎉  登录成功！');
-        let { redirect } = params as { redirect: string };
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (window.routerBase !== '/') {
-              redirect = redirect.replace(window.routerBase, '/');
-            }
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
-            }
-          } else {
-            window.location.href = '/';
-            return;
-          }
-        }
-        history.replace(redirect || '/');
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        });
+
+        //reedirect
+        history.replace('/');
       }
+
+
+     
     },
 
-    logout() {
-      const { redirect } = getPageQuery();
-      // Note: There may be security issues, please note
-      if (window.location.pathname !== '/user/login' && !redirect) {
+    *logout(_,{call}) {
+      const load = message.loading("退出中....");
+
+      const response = yield call(logout);
+      if (response.status === undefined){
+        
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('userInfo');
+        message.success('Login out Success!');
         history.replace({
-          pathname: '/user/login',
+          pathname: '/login',
           search: stringify({
             redirect: window.location.href,
           }),
         });
+        load()
       }
+
+
+
+
+      // const { redirect } = getPageQuery();
+      // // Note: There may be security issues, please note
+      // if (window.location.pathname !== '/login' && !redirect) {
+      //   history.replace({
+      //     pathname: '/login',
+      //     search: stringify({
+      //       redirect: window.location.href,
+      //     }),
+      //   });
+      // }
     },
   },
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      //setAuthority(payload.access_token);
+      //resorted token into localstorage
+
+      localStorage.setItem('access_token',payload.access_token)
       return {
         ...state,
-        status: payload.status,
-        type: payload.type,
       };
     },
   },

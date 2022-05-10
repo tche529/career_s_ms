@@ -31,12 +31,22 @@ export default [
             component: '../layouts/BasicLayout',
             //authority: ['admin', 'user'],
             routes: [
-              
               {
                 path: '/',
+                redirect:'/dashboard',
               },
-              
-
+              {
+                path: '/dashboard',
+                name:'dashboard',
+                icon: '📊',
+                component:'@/pages/DashBoard',
+              },
+              {
+                path: '/user',
+                name:'user',
+                icon: '👩🏽‍🎓',
+                component:'@/pages/User',
+              },
               {
                 component: './404',
               },

@@ -8,11 +8,11 @@ import {
   WeiboCircleOutlined,
 } from '@ant-design/icons';
 import { Alert, Space, message, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, connect, FormattedMessage } from 'umi';
 import { getFakeCaptcha } from '@/services/login';
-import type { Dispatch } from 'umi';
+import { Dispatch,history } from 'umi';
 import type { StateType } from '@/models/login';
 import type { LoginParamsType } from '@/services/login';
 import type { ConnectState } from '@/models/connect';
@@ -25,26 +25,21 @@ export type LoginProps = {
   submitting?: boolean;
 };
 
-const LoginMessage: React.FC<{
-  content: string;
-}> = ({ content }) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
 
 const Login: React.FC<LoginProps> = (props) => {
-  const { userLogin = {}, submitting } = props;
-  const { status, type: loginType } = userLogin;
+  useEffect (() => {
+    const userInfo = localStorage.getItem('userInfo');
+    if(userInfo) history.replace('/')
+
+  });
+
+  const { submitting } = props;
+  
   const [type, setType] = useState<string>('account');
   const intl = useIntl();
 
   const handleSubmit = (values: LoginParamsType) => {
+    //console.log(values);
     const { dispatch } = props;
     dispatch({
       type: 'login/login',
@@ -68,6 +63,7 @@ const Login: React.FC<LoginProps> = (props) => {
           },
         }}
         onFinish={(values) => {
+          
           handleSubmit(values as LoginParamsType);
           return Promise.resolve();
         }}
@@ -89,25 +85,18 @@ const Login: React.FC<LoginProps> = (props) => {
           />
         </Tabs>
 
-        {status === 'error' && loginType === 'account' && !submitting && (
-          <LoginMessage
-            content={intl.formatMessage({
-              id: 'pages.login.accountLogin.errorMessage',
-              defaultMessage: 'Incorrect account or password（admin/ant.design)',
-            })}
-          />
-        )}
+        
         {type === 'account' && (
           <>
             <ProFormText
-              name="userName"
+              name="email"
               fieldProps={{
                 size: 'large',
                 prefix: <UserOutlined className={styles.prefixIcon} />,
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: 'Username: admin or user',
+                defaultMessage: 'Username: super@a.com',
               })}
               rules={[
                 {
@@ -115,9 +104,13 @@ const Login: React.FC<LoginProps> = (props) => {
                   message: (
                     <FormattedMessage
                       id="pages.login.username.required"
-                      defaultMessage="Please enter user name!"
+                      defaultMessage="Please enter email!"
                     />
                   ),
+                },
+                {
+                  type: 'email',
+                  message: 'Please enter correct email',
                 },
               ]}
             />
@@ -129,7 +122,7 @@ const Login: React.FC<LoginProps> = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.password.placeholder',
-                defaultMessage: 'Password: ant.design',
+                defaultMessage: 'Password: 123123',
               })}
               rules={[
                 {
@@ -146,9 +139,7 @@ const Login: React.FC<LoginProps> = (props) => {
           </>
         )}
 
-        {status === 'error' && loginType === 'mobile' && !submitting && (
-          <LoginMessage content="Verification code error" />
-        )}
+
         {type === 'mobile' && (
           <>
             <ProFormText
