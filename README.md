@@ -9,7 +9,7 @@ install dependency
 $ yarn
 
 default view：
-$ yarn 
+$ yarn start
 
 not default view:
 $ yarn dev
