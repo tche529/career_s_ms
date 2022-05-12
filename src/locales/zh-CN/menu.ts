@@ -1,7 +1,7 @@
 /*
- * @Descripttion: 
+ * @Descripttion:
  * @version: 1.0
- * @Author: 
+ * @Author:
  * @Date: 2021-10-08 15:46:24
  * @LastEditors: YingJie Xing
  * @LastEditTime: 2021-10-09 10:24:51
@@ -62,4 +62,5 @@ export default {
   'menu.dashboardworkplace': '工作台',
   'menu.dashboard': '个人信息',
   'menu.user': '用户管理',
+  'menu.goods': '课程管理',
 };

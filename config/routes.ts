@@ -33,19 +33,25 @@ export default [
             routes: [
               {
                 path: '/',
-                redirect:'/dashboard',
+                redirect: '/dashboard',
               },
               {
                 path: '/dashboard',
-                name:'dashboard',
+                name: 'dashboard',
                 icon: '📊',
-                component:'@/pages/DashBoard',
+                component: '@/pages/DashBoard',
               },
               {
                 path: '/user',
-                name:'user',
+                name: 'user',
                 icon: '👩🏽‍🎓',
-                component:'@/pages/User',
+                component: '@/pages/User',
+              },
+              {
+                path: '/goods',
+                name: 'goods',
+                icon: '📚',
+                component: '@/pages/Goods',
               },
               {
                 component: './404',
@@ -59,5 +65,4 @@ export default [
       },
     ],
   },
-  
 ];
