@@ -7,10 +7,13 @@ import ProTable from '@ant-design/pro-table';
 import {getUsers,lockerUser} from '@/services/user';
 import ProForm from '@ant-design/pro-form';
 import Create from "./components/Create";
-
+import Edit from "./components/Edit";
+import CreateorEdit from "./components/CreateorEdit";
 
 const Index = () =>{
     const [isModalVisible,setModalVisible] = useState(false);
+    //const [isModalVisibleEdit,setModalVisibleEdit] = useState(false);
+    const [editId,seteditId] = useState(undefined);
     //表格的ref，用于自定义操作表格
     const actionRef = useRef();
 
@@ -29,12 +32,17 @@ const Index = () =>{
                 total:response.meta.pagination.total,
             };
     }
-    //控制模态框
-    const isShowModal = (show) =>{
+    //控制新建模态框
+    const isShowModal = (show,id=undefined) =>{
+        seteditId(id)
         setModalVisible(show)
     }
 
-    
+    //控制编辑模态框
+    // const isShowModalEdit = (show,id) =>{
+    //     seteditId(id)
+    //     setModalVisibleEdit(show)      
+    // }
 
 
 
@@ -77,7 +85,7 @@ const Index = () =>{
         {
             title:'操作',
             hideInSearch:true,
-            render: (_,record) => <a onChange={() =>{}}>编辑</a>
+            render: (_,record) => <a onClick={() =>isShowModal(true,record.id)}>编辑</a>
                         
         },
     ]
@@ -124,11 +132,21 @@ const Index = () =>{
         
       ]}
     />
-    <Create  
+
+    {
+        //判断模态框隐藏的时候不挂载组件，触发子组件的生命周期
+        isModalVisible ?
+        <CreateorEdit 
         isModalVisible = {isModalVisible} 
         isShowModal = {isShowModal}
         actionRef = {actionRef}
+        editId = {editId}
         />
+        : ''
+    }
+
+    
+    
     </PageContainer>
         
 
