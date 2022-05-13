@@ -7,12 +7,12 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Space, message, Tabs } from 'antd';
-import React, { useState , useEffect } from 'react';
+import { Space, message, Tabs } from 'antd';
+import React, { useState, useEffect } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { useIntl, connect, FormattedMessage } from 'umi';
 import { getFakeCaptcha } from '@/services/login';
-import { Dispatch,history } from 'umi';
+import { Dispatch, history } from 'umi';
 import type { StateType } from '@/models/login';
 import type { LoginParamsType } from '@/services/login';
 import type { ConnectState } from '@/models/connect';
@@ -25,16 +25,14 @@ export type LoginProps = {
   submitting?: boolean;
 };
 
-
 const Login: React.FC<LoginProps> = (props) => {
-  useEffect (() => {
+  useEffect(() => {
     const userInfo = localStorage.getItem('userInfo');
-    if(userInfo) history.replace('/')
-
+    if (userInfo) history.replace('/');
   });
 
   const { submitting } = props;
-  
+
   const [type, setType] = useState<string>('account');
   const intl = useIntl();
 
@@ -63,7 +61,6 @@ const Login: React.FC<LoginProps> = (props) => {
           },
         }}
         onFinish={(values) => {
-          
           handleSubmit(values as LoginParamsType);
           return Promise.resolve();
         }}
@@ -85,7 +82,6 @@ const Login: React.FC<LoginProps> = (props) => {
           />
         </Tabs>
 
-        
         {type === 'account' && (
           <>
             <ProFormText
@@ -138,7 +134,6 @@ const Login: React.FC<LoginProps> = (props) => {
             />
           </>
         )}
-
 
         {type === 'mobile' && (
           <>

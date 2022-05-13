@@ -59,6 +59,7 @@ const NoticeIcon: React.FC<NoticeIconProps> & {
       return null;
     }
     const panes: React.ReactNode[] = [];
+    console.log(React.Children);
     React.Children.forEach(children, (child: React.ReactElement<NoticeIconTabProps>): void => {
       if (!child) {
         return;

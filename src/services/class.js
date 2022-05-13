@@ -15,17 +15,16 @@ export async function isrecommend(goodid) {
 
 //添加课程
 export async function addClass(params) {
-  //console.log('addUser');
+  //console.log(params);
   return request.post('/admin/goods', { params });
 }
 //编辑课程
 export async function updateClass(goodid, params) {
-  //console.log('addUser');
+  console.log('addUser');
   return request.put(`/admin/goods/${goodid}`, { params });
 }
 
 //get CLASS BY ID
 export async function getClass(goodid) {
-  //console.log('addUser');
-  return request.get(`/admin/goods/${goodid}`);
+  return request.get(`/admin/goods/${goodid}?include=category`);
 }

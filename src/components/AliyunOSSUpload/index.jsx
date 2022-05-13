@@ -35,9 +35,15 @@ export default class AliyunOSSUpload extends React.Component {
   onChange = ({ file }) => {
     //console.log(file)
     if (file.status === 'done') {
-      this.props.setCoverKey(file.key);
+      const { setCoverKey, insertImage } = this.props;
+      if (setCoverKey) setCoverKey(file.key);
+      if (insertImage) insertImage(file.url);
       message.success('上传成功');
     }
+
+    // if (this.props.insertImage){
+    //   this.props.insertImage(file.url)
+    // }
   };
 
   /**
@@ -80,7 +86,7 @@ export default class AliyunOSSUpload extends React.Component {
   };
 
   render() {
-    const { value, accept } = this.props;
+    const { value, accept, showUploadList } = this.props;
     const props = {
       accept: accept || '',
       name: 'file',
@@ -92,11 +98,8 @@ export default class AliyunOSSUpload extends React.Component {
       beforeUpload: this.beforeUpload,
       listType: 'picture',
       maxCount: 1,
+      showUploadList,
     };
-    return (
-      <Upload {...props}>
-        <Button icon={<UploadOutlined />}>点击上传</Button>
-      </Upload>
-    );
+    return <Upload {...props}>{this.props.children}</Upload>;
   }
 }
