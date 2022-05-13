@@ -14,14 +14,14 @@ export async function isrecommend(goodid) {
 }
 
 //添加课程
-export async function addClass(params) {
+export async function addClass(data) {
   //console.log(params);
-  return request.post('/admin/goods', { params });
+  return request.post('/admin/goods', { data });
 }
 //编辑课程
-export async function updateClass(goodid, params) {
+export async function updateClass(goodid, data) {
   console.log('addUser');
-  return request.put(`/admin/goods/${goodid}`, { params });
+  return request.put(`/admin/goods/${goodid}`, { data });
 }
 
 //get CLASS BY ID

@@ -1,6 +1,8 @@
 /** Request 网络请求工具 更详细的 api 文档: https://github.com/umijs/umi-request */
 import { extend } from 'umi-request';
 import { message } from 'antd';
+import { history } from 'umi';
+import { stringify } from 'querystring';
 
 const codeMessage: Record<number, string> = {
   200: '服务器成功返回请求的数据。',
@@ -20,7 +22,6 @@ const codeMessage: Record<number, string> = {
   504: '网关超时。',
 };
 
-
 /**
  * @zh-CN 异常处理程序
  * @en-US Exception handler
@@ -32,24 +33,35 @@ const errorHandler = async (error: { response: Response }): Response => {
     const { status } = response;
 
     const result = await response.json();
-    
-    
+
     //处理422
-    if (status === 422){
+    if (status === 422) {
       let errs = '';
-      for (const k in result.errors){
-        errs += result.errors[k][0]
+      for (const k in result.errors) {
+        errs += result.errors[k][0];
       }
       errorText += `[ ${errs} ]`;
     }
+    //处理401
+    if (status === 401) {
+      errorText += `[ ${result.message} ]`;
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('userInfo');
+      history.replace({
+        pathname: '/login',
+        search: stringify({
+          redirect: window.location.href,
+        }),
+      });
+    }
     //处理400
-    if (status === 400){
+    if (status === 400) {
       errorText += `[ ${result.message} ]`;
     }
 
     message.error(errorText);
   } else if (!response) {
-    message.error('Your network is abnormal and cannot connect to the server')
+    message.error('Your network is abnormal and cannot connect to the server');
   }
   return response;
 };
@@ -64,18 +76,16 @@ const request = extend({
   prefix: '/api',
 });
 
-
 request.interceptors.request.use(async (url, options) => {
-  
   const token = localStorage.getItem('access_token') || '';
   const headers = {
-    Authorization: `Bearer ${token}`
-  }
+    Authorization: `Bearer ${token}`,
+  };
 
   return {
     url,
-    options: {...options,headers},
-  }
+    options: { ...options, headers },
+  };
 });
 
 export default request;

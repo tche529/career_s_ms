@@ -2,9 +2,8 @@ import { stringify } from 'querystring';
 import type { Reducer, Effect } from 'umi';
 import { history } from 'umi';
 
-import { fakeAccountLogin,logout } from '@/services/login';
-//import { setAuthority } from '@/utils/authority';
-//import { getPageQuery } from '@/utils/utils';
+import { fakeAccountLogin, logout } from '@/services/login';
+
 import { message } from 'antd';
 
 export type StateType = {
@@ -35,9 +34,8 @@ const Model: LoginModelType = {
   effects: {
     //send request,excuet login
     *login({ payload }, { call, put }) {
-    
       const response = yield call(fakeAccountLogin, payload);
-      if (response.status === undefined){
+      if (response.status === undefined) {
         message.success('🎉 🎉 🎉  登录成功！');
         yield put({
           type: 'changeLoginStatus',
@@ -47,17 +45,13 @@ const Model: LoginModelType = {
         //reedirect
         history.replace('/');
       }
-
-
-     
     },
 
-    *logout(_,{call}) {
-      const load = message.loading("退出中....");
+    *logout(_, { call }) {
+      const load = message.loading('退出中....');
 
       const response = yield call(logout);
-      if (response.status === undefined){
-        
+      if (response.status === undefined) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('userInfo');
         message.success('Login out Success!');
@@ -67,11 +61,8 @@ const Model: LoginModelType = {
             redirect: window.location.href,
           }),
         });
-        load()
+        load();
       }
-
-
-
 
       // const { redirect } = getPageQuery();
       // // Note: There may be security issues, please note
@@ -91,7 +82,7 @@ const Model: LoginModelType = {
       //setAuthority(payload.access_token);
       //resorted token into localstorage
 
-      localStorage.setItem('access_token',payload.access_token)
+      localStorage.setItem('access_token', payload.access_token);
       return {
         ...state,
       };
